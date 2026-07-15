@@ -9,8 +9,8 @@ __global__ void sumReduction(int n, float* array, float* result)
     if(tid < n)
     {
         printf("threadIdx.x %d , blockIdx.x %d, blockDim.x %d.",threadIdx.x,blockIdx.x,blockDim.x);
-        cuda::atomic_ref<float,cuda::thread_scope_device> result_ref(*result);
-        result_ref.fetch_add(array[tid]);
+        cuda::atomic_ref<float, cuda::thread_scope_device> result_ref(*result);
+        result_ref.fetch_add(array[tid], cuda::memory_order_relaxed);
     }
 }
 int main(int argc, char** argv)
