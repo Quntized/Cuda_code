@@ -30,8 +30,29 @@ int main(int argc, char** argv)
     std::cout<<"blocks = "<<blocks<<std::endl;
     std::cout<<"Start "<<n<<"\n";
     sumReduction<<<blocks,threadsperblock>>>(n,d_array,d_result);
-    cudaDeviceSynchronize();
-    cudaMemcpy(&h_result, d_result,sizeof(float),cudaMemcpyDeviceToHost);
+    cudaError_t launchErr = cudaGetLastError();
+    if (launchErr != cudaSuccess) {
+        std::cerr << "Kernel Launch Error: " << cudaGetErrorString(launchErr) << "\n";
+        cudaFree(d_array);
+        cudaFree(d_result);
+        return -1;
+    }
+
+    cudaError_t syncErr = cudaDeviceSynchronize();
+    if (syncErr != cudaSuccess) {
+        std::cerr << "Kernel Execution Error: " << cudaGetErrorString(syncErr) << "\n";
+        cudaFree(d_array);
+        cudaFree(d_result);
+        return -1;
+    }
+
+    cudaError_t copyErr = cudaMemcpy(&h_result, d_result, sizeof(float), cudaMemcpyDeviceToHost);
+    if (copyErr != cudaSuccess) {
+        std::cerr << "cudaMemcpy Error: " << cudaGetErrorString(copyErr) << "\n";
+        cudaFree(d_array);
+        cudaFree(d_result);
+        return -1;
+    }
     std::cout<<"this ==== "<<h_result<<std::endl;
     if(h_result == (float)n){
         std::cout<<"Success!!!! "<<std::endl;
