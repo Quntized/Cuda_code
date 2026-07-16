@@ -3,7 +3,7 @@
 #include <cuda_runtime.h>
 #include <cuda_tile.h>
 
-__tile_global__ void conditional_load(float* __restrict__ arr, float* __restrict__ out, int num_tiles){
+__tile_global__ void conditional_load(float* __restrict__ arr, float* __restrict__ out, int num_tiles, int N){
     namespace ct = cuda::tiles;
     using namespace ct::literals;
     using f32x8 = ct::tile<float,ct::shape<8>>;
@@ -38,9 +38,9 @@ int main(int argc, char** argv){
     cudaMemcpy(d_out, h_out.data(),sizeof(float)*n,cudaMemcpyHostToDevice);
     int num_blocks  = (n + 8 - 1)/8;
     std::cout<<"num_blocks = "<<num_blocks<<std::endl;
-    conditional_load<<<num_blocks,1>>>(d_arr,d_out,num_tiles);
+    conditional_load<<<num_blocks,1>>>(d_arr,d_out,num_tiles,n);
     cudaDeviceSynchronize();
-    cudaMemcpy(h_out.data(),d_out,sizeof(float)*8,cudaMemcpyDeviceToHost);
+    cudaMemcpy(h_out.data(),d_out,sizeof(float)*n,cudaMemcpyDeviceToHost);
     for(int i =0; i<20; ++i){
         std::cout<<"result = "<<h_out[i]<<std::endl;
     }
