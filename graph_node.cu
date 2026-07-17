@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <cuda_runtime.h>
+#include <nv/target>
 
 __global__ void kernelA(float* in,float* A,int N){
     int idx = blockIdx.x * blockDim.x + threadIdx.x;
