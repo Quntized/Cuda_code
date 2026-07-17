@@ -102,5 +102,5 @@ int main(int argc, char** argv){
     cudaFreeHost(h_in);
     cudaFreeHost(h_out);
     return 0;
-
+//refer to section 4.2.2.1.1. Graph APIs
 }
