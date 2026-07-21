@@ -23,6 +23,7 @@ int main(){
     CUDA_CHECK(cudaFuncGetAttributes(&attr,reinterpret_cast<const void*>(kernel)));
     std::cout<<"ptx virtual arch: "<<attr.ptxVersion<<"\n";
     std::cout<<"Binary arch: "<<attr.binaryVersion<<"\n";
+    std::cout<<"maxDynamicSharedSizeBytes  = "<<attr.maxDynamicSharedSizeBytes<<"\n"; //https://docs.nvidia.com/cuda/cuda-runtime-api/structcudaFuncAttributes.html#structcudaFuncAttributes_14e4e85e7111f39739d38fb7c6fe26a42
     std::cout<<"Registers per thread: "<<attr.numRegs<<"\n";
     std::cout<<"Static Shared Memory(bytes): "<<attr.sharedSizeBytes<<"\n";
     std::cout<<"Max threads per block: "<<attr.maxThreadsPerBlock<<"\n";
